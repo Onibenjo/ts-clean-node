@@ -14,4 +14,8 @@ module.exports = {
     // ecmaVersion: 9,
     // project: './tsconfig.json'
   },
+  rules: {
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+  },
 };

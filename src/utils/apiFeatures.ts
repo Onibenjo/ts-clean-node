@@ -1,14 +1,19 @@
-import { ParsedUrlQuery } from 'querystring';
+// import { ParsedQs } from 'qs';
+import { Document, Query } from 'mongoose';
+
 interface QString {
-  page: number;
-  limit: number;
+  // [key: string]: string | undefined;
+  page?: string;
+  limit?: string;
   fields?: string;
+  sort?: string;
+  // [key: string]: string | ParsedQs | string[] | ParsedQs[] | undefined;
 }
 
 class APIFeatures {
-  query: string;
+  query: Query<Array<Document>, Document>;
   queryString: QString;
-  constructor(query: string, queryString: QString) {
+  constructor(query: Query<Array<Document>, Document>, queryString: QString) {
     this.query = query;
     this.queryString = queryString;
   }

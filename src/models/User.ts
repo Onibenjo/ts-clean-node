@@ -4,7 +4,10 @@ import bcrypt from 'bcrypt';
 export interface IUser extends Document {
   email: string;
   name: string;
+  username: string;
   role: 'user' | 'admin';
+  comparePassword(_: string, _i: string): boolean;
+  password: string;
 }
 
 const userSchema = new Schema(
@@ -13,12 +16,17 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Please fill your name'],
     },
+    username: {
+      type: String,
+      required: [true, 'Please fill your name'],
+      unique: true,
+    },
     email: {
       type: String,
       required: [true, 'Please fill your email'],
       unique: true,
       lowercase: true,
-      validate: [validator.isEmail, ' Please provide a valid email'],
+      //   validate: [validator.isEmail, ' Please provide a valid email'],
     },
     password: {
       type: String,
@@ -30,7 +38,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Please fill your password confirm'],
       validate: {
-        validator: function (el) {
+        validator: function (el: string) {
           // "this" works only on create and save
           return el === this.password;
         },
@@ -68,7 +76,7 @@ userSchema.pre('save', async function (next) {
 });
 
 // This is Instance Method that is gonna be available on all documents in a certain collection
-userSchema.methods.correctPassword = async function (
+userSchema.methods.comparePassword = async function (
   typedPassword,
   originalPassword
 ) {

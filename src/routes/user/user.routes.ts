@@ -1,9 +1,11 @@
 import userController from '@controllers/user/userController';
+import authController from '@controllers/auth/authController';
 import { NextFunction, Request, Response, Router } from 'express';
 
-class TestRouter {
+class UserRouter {
   private _router = Router();
   private _controller = userController;
+  private _authController = authController;
 
   get router() {
     return this._router;
@@ -15,31 +17,37 @@ class TestRouter {
 
   private _configure() {
     // read
-    this._router.get('/', (req: Request, res: Response, next: NextFunction) => {
-      try {
-        return res.status(200).json(this._controller.defaultMethod());
-      } catch (error) {
-        next(error);
+    this._router.get(
+      '/',
+      (_req: Request, res: Response, next: NextFunction) => {
+        try {
+          return res.status(200).json(this._controller.defaultMethod());
+        } catch (error) {
+          next(error);
+        }
       }
-    });
-    // create
-    this._router.post('/new', (req, res: Response) =>
-      this._controller.createUser(req, res)
     );
     // create
-    this._router.patch('/:id', (req, res: Response) =>
-      this._controller.editUser(req, res)
-    );
-    // read
-    this._router.get('/error', (_, res: Response, next: NextFunction) => {
-      try {
-        const result = this._controller.throwError();
-        res.status(200).json(result);
-      } catch (error) {
-        next(error);
-      }
-    });
+    // this._router.post('/new', this._controller.createUser);
+    this._router.post('/login', this._authController.login);
+    this._router.post('/signup', this._authController.signup);
+
+    // Protect all routes after this middleware
+    this._router.use(this._authController.protect);
+
+    this._router.delete('/deleteMe', userController.deleteMe);
+
+    // Only admin have permission to access for the below APIs
+    this._router.use(this._authController.restrictTo('admin'));
+
+    this._router.route('/').get(this._controller.getAll);
+
+    this._router
+      .route('/:id')
+      .get(this._controller.getUser)
+      .patch(this._controller.editUser)
+      .delete(this._controller.deleteUser);
   }
 }
 
-export = new TestRouter().router;
+export = new UserRouter().router;

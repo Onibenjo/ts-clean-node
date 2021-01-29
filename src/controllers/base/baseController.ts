@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Model } from 'mongoose';
-import ErrorHandler from '@models/ErrorHandler';
+import { Model, Document } from 'mongoose';
 import ErrorHandler from '@models/ErrorHandler';
 import APIFeatures from 'utils/apiFeatures';
 
@@ -8,7 +7,7 @@ import APIFeatures from 'utils/apiFeatures';
 
 // type Model = Model;
 
-exports.deleteOne = (Model: Model) => async (
+const deleteOne = (Model: Model<Document>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -31,7 +30,7 @@ exports.deleteOne = (Model: Model) => async (
   }
 };
 
-exports.updateOne = (Model: Model) => async (
+const updateOne = (Model: Model<Document>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -59,7 +58,7 @@ exports.updateOne = (Model: Model) => async (
   }
 };
 
-exports.createOne = (Model: Model) => async (
+const createOne = (Model: Model<Document>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -78,7 +77,7 @@ exports.createOne = (Model: Model) => async (
   }
 };
 
-exports.getOne = (Model: Model) => async (
+const getOne = (Model: Model<Document>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -103,7 +102,7 @@ exports.getOne = (Model: Model) => async (
   }
 };
 
-exports.getAll = (Model: Model) => async (
+const getAll = (Model: Model<Document>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -124,3 +123,12 @@ exports.getAll = (Model: Model) => async (
     next(error);
   }
 };
+
+const baseController = Object.freeze({
+  deleteOne,
+  updateOne,
+  createOne,
+  getOne,
+  getAll,
+});
+export default baseController;

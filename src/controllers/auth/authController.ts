@@ -1,14 +1,15 @@
 import ErrorHandler from '@models/ErrorHandler';
 import User from '@models/User';
+import usersDb from 'data-access/users-db';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 
-const createToken = (id) => {
+const createToken = (id: string) => {
   return jwt.sign(
     {
       id,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || '',
     {
       expiresIn: process.env.JWT_EXPIRES_IN,
     }
@@ -35,7 +36,7 @@ class AuthController {
         email,
       }).select('+password');
 
-      if (!user || !(await user.correctPassword(password, user.password))) {
+      if (!user || !user.comparePassword(password, user.password)) {
         return next(
           new ErrorHandler(401, 'fail', 'Email or Password is wrong'),
           req,
@@ -64,8 +65,9 @@ class AuthController {
 
   signup = async (req, res, next) => {
     try {
-      const user = await User.create({
+      const user = await usersDb.addUser({
         name: req.body.name,
+        username: req.body.username,
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
@@ -152,4 +154,5 @@ class AuthController {
   };
 }
 
-export default new AuthController();
+const authController = new AuthController();
+export default authController;

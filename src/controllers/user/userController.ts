@@ -1,50 +1,24 @@
 import ErrorHandler from '@models/ErrorHandler';
 import User from '@models/User';
+import baseController from '@controllers/base/baseController';
+import { Request, Response } from 'express';
 
-class TestController {
+class UserController {
+  private _base = baseController;
   defaultMethod() {
     return {
       text: 'Testing testing testing',
     };
   }
-  getAll(req: Request, res: Response) {
+
+  getAll = this._base.getAll(User);
+  getUser = this._base.updateOne(User);
+  editUser = this._base.updateOne(User);
+  deleteUser = this._base.deleteOne(User);
+
+  deleteMe = async (req: Request, res: Response, next) => {
     try {
-      base.getAll(User);
-    } catch (error) {
-      this.throwError(500, 'Error creating user');
-    }
-  }
-  getUser(req: Request, res: Response) {
-    try {
-      base.updateOne(User);
-    } catch (error) {
-      this.throwError(500, 'Error creating user');
-    }
-  }
-  createUser(req: Request, res: Response) {
-    const { name, username, photoURL } = req.body;
-    try {
-    } catch (error) {
-      this.throwError(500, 'Error creating user');
-    }
-  }
-  editUser(req, res) {
-    try {
-      base.updateOne(User);
-    } catch (error) {
-      this.throwError(500, 'Error creating user');
-    }
-  }
-  deleteUser(req, res) {
-    try {
-      base.deleteOne(User);
-    } catch (error) {
-      this.throwError(500, 'Error creating user');
-    }
-  }
-  deleteMe = async (req, res, next) => {
-    try {
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.body.id, {
         active: false,
       });
 
@@ -61,4 +35,4 @@ class TestController {
   }
 }
 
-export = new TestController();
+export = new UserController();

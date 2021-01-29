@@ -3,13 +3,13 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import MasterRouter from '@routes/MasterRouter';
 import ErrorHandler from '@models/ErrorHandler';
+import 'db/mongodb/connection';
 
 dotenv.config({
   path: '.env',
@@ -70,16 +70,6 @@ server.app.use(
     // next()
   }
 );
-
-mongoose
-  .connect(
-    'mongodb+srv://onibenjo:' +
-      process.env.MONGOPWD +
-      '@amweak.nbibc.mongodb.net/amweak?retryWrites=true&w=majority',
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => console.log('DB connected'))
-  .catch((err) => console.log(err));
 
 const port = process.env.PORT || 5000;
 

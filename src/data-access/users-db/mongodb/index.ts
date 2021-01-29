@@ -1,6 +1,14 @@
-import User from '@models/User';
+import User, { IUser } from '@models/User';
 import makeUser from 'user';
 import serialize from './serializer';
+
+interface IUserInfo {
+  name: string;
+  username: string;
+  password: string;
+  passwordConfir: string;
+  email: string;
+}
 
 const listUsers = () => {
   return User.find({}).then(serialize);
@@ -19,12 +27,17 @@ const findUsersBy = (prop: string, val: unknown) => {
   return User.find({ [prop]: val }).then(serialize);
 };
 
-const addUser = (userInfo: { name: string; username: string }) => {
+const addUser = (userInfo: IUser) => {
   const user = makeUser(userInfo);
   const newUser = {
     name: user.getName(),
     username: user.getUsername(),
+    email: user.getEmail(),
+    password: user.getPassword(),
+    confirmPassword: user.getConfirmPassword(),
   };
+  // return newUser;
+  // return User.create(newUser);
   return User.create(newUser).then(serialize);
 };
 

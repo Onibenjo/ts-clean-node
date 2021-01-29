@@ -1,12 +1,32 @@
 @baseUrl = http://localhost:5000/api/v1
 
-
 # @name test
 GET {{baseUrl}}/test/hi
 
 ###
 GET {{baseUrl}}/test/error
 
+###
+GET {{baseUrl}}/user?page=1&limit=10
+###
+POST {{baseUrl}}/user/login HTTP/1.1 
+content-type: application/json
+
+{
+    "email": "benjo4@gmail.com",
+    "password": "benjoo"
+}
+###
+POST {{baseUrl}}/user/signup HTTP/1.1 
+content-type: application/json
+
+{
+    "name": "Benjamin",
+    "username": "benjo4",
+    "email": "benjo4@gmail.com",
+    "password": "benjoo",
+    "confirmPassword": "benjoo"
+}
 
 # POST {{baseUrl}}/test HTTP/1.1
 # content-type: application/json

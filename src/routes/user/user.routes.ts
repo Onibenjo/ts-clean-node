@@ -17,16 +17,7 @@ class UserRouter {
 
   private _configure() {
     // read
-    this._router.get(
-      '/',
-      (_req: Request, res: Response, next: NextFunction) => {
-        try {
-          return res.status(200).json(this._controller.defaultMethod());
-        } catch (error) {
-          next(error);
-        }
-      }
-    );
+    this._router.get('/', this._controller.getAll);
     // create
     // this._router.post('/new', this._controller.createUser);
     this._router.post('/login', this._authController.login);
@@ -35,7 +26,12 @@ class UserRouter {
     // Protect all routes after this middleware
     this._router.use(this._authController.protect);
 
-    this._router.delete('/deleteMe', userController.deleteMe);
+    this._router.delete('/deleteMe', this._controller.deleteMe);
+    this._router
+      .route('/:id')
+      .get(this._controller.getUser)
+      .patch(this._controller.editUser)
+      .put(this._controller.editUser);
 
     // Only admin have permission to access for the below APIs
     this._router.use(this._authController.restrictTo('admin'));
@@ -46,6 +42,7 @@ class UserRouter {
       .route('/:id')
       .get(this._controller.getUser)
       .patch(this._controller.editUser)
+      .put(this._controller.editUser)
       .delete(this._controller.deleteUser);
   }
 }

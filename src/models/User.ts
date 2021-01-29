@@ -1,13 +1,22 @@
 import { model, Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-export interface IUser extends Document {
+export interface IUser {
   email: string;
   name: string;
   username: string;
   role: 'user' | 'admin';
-  comparePassword(_: string, _i: string): boolean;
   password: string;
+  confirmPassword?: string;
+}
+interface IUserBaseDocument extends IUser, Document<string> {
+  comparePassword(_: string, _i: string): boolean;
+}
+
+export interface IUserDocument extends IUserBaseDocument {
+  confirmPassword?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema(
@@ -20,6 +29,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Please fill your name'],
       unique: true,
+      lowercase: true,
     },
     email: {
       type: String,
@@ -34,7 +44,7 @@ const userSchema = new Schema(
       minLength: 6,
       select: false,
     },
-    passwordConfirm: {
+    confirmPassword: {
       type: String,
       required: [true, 'Please fill your password confirm'],
       validate: {
@@ -61,7 +71,7 @@ const userSchema = new Schema(
 
 // encrypt the password using 'bcryptjs'
 // Mongoose -> Document Middleware
-userSchema.pre('save', async function (next) {
+userSchema.pre<IUserDocument>('save', async function (next) {
   // check the password if it is modified
   if (!this.isModified('password')) {
     return next();
@@ -70,8 +80,8 @@ userSchema.pre('save', async function (next) {
   // Hashing the password
   this.password = await bcrypt.hash(this.password, 12);
 
-  // Delete passwordConfirm field
-  this.passwordConfirm = undefined;
+  // Delete confirmPassword field
+  this.confirmPassword = undefined;
   next();
 });
 
@@ -83,6 +93,6 @@ userSchema.methods.comparePassword = async function (
   return await bcrypt.compare(typedPassword, originalPassword);
 };
 
-const User = model<IUser>('User', userSchema);
+const User = model<IUserDocument>('User', userSchema);
 
 export default User;

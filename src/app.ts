@@ -32,7 +32,8 @@ server.app.use(
 server.app.use(helmet());
 // Allow Cross-Origin requests
 server.app.use(cors({ origin: true }));
-server.app.use(morgan('combined'));
+server.app.use(morgan('dev'));
+// server.app.use(morgan('combined'));
 // Data sanitization against Nosql query injection
 server.app.use(mongoSanitize());
 // Data sanitization against XSS(clean user input from malicious HTML code)

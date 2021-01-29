@@ -12,7 +12,7 @@ class UserController {
   }
 
   getAll = this._base.getAll(User);
-  getUser = this._base.updateOne(User);
+  getUser = this._base.getOne(User);
   editUser = this._base.updateOne(User);
   deleteUser = this._base.deleteOne(User);
 

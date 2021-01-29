@@ -77,7 +77,7 @@ const createOne = (Model: Model<Document>) => async (
   }
 };
 
-const getOne = (Model: Model<Document>) => async (
+const getOne = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction

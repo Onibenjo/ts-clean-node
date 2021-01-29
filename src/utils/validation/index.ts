@@ -5,6 +5,7 @@ const validator = (schema: Joi.Schema) => (
 ): boolean | { error: string } => {
   const { error } = schema.validate(payload, { abortEarly: false });
   if (error) {
+    if (!error.details) return { error: error.message };
     const message = error.details.map((el) => el.message).join('\n');
     return {
       error: message,

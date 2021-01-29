@@ -4,14 +4,15 @@ import usersDb from 'data-access/users-db';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 
-const createToken = (id: string) => {
+const createToken = (id?: string) => {
+  if (!id) return null;
   return jwt.sign(
     {
       id,
     },
-    process.env.JWT_SECRET || '',
+    process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_EXPIRES_IN || '1d',
     }
   );
 };
@@ -36,7 +37,7 @@ class AuthController {
         email,
       }).select('+password');
 
-      if (!user || !user.comparePassword(password, user.password)) {
+      if (!user || !(await user.comparePassword(password, user.password))) {
         return next(
           new ErrorHandler(401, 'fail', 'Email or Password is wrong'),
           req,
@@ -70,19 +71,29 @@ class AuthController {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
+        confirmPassword: req.body.confirmPassword,
         role: req.body.role,
       });
 
-      const token = createToken(user.id);
+      if (!user) throw new Error('An error occurred');
 
-      user.password = undefined;
+      const token = createToken(user?.id);
+
+      // user.password = undefined;
+      const data = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
 
       res.status(201).json({
         status: 'success',
         token,
         data: {
-          user,
+          user: data,
         },
       });
     } catch (err) {

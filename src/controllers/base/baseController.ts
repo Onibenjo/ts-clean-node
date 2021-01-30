@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
 import { Model, Document } from 'mongoose';
@@ -8,7 +9,7 @@ import APIFeatures from 'utils/apiFeatures';
 
 // type Model = Model;
 
-const deleteOne = (Model: Model<Document>) => async (
+const deleteOne = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -31,7 +32,7 @@ const deleteOne = (Model: Model<Document>) => async (
   }
 };
 
-const updateOne = (Model: Model<Document>) => async (
+const updateOne = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -59,7 +60,7 @@ const updateOne = (Model: Model<Document>) => async (
   }
 };
 
-const createOne = (Model: Model<Document>) => async (
+const createOne = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -78,9 +79,10 @@ const createOne = (Model: Model<Document>) => async (
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type T = Document;
 
-const getOne = (Model: Model<T>) => async (
+const getOne = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -105,7 +107,7 @@ const getOne = (Model: Model<T>) => async (
   }
 };
 
-const getAll = (Model: Model<Document>) => async (
+const getAll = (Model: Model<any>) => async (
   req: Request,
   res: Response,
   next: NextFunction

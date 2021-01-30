@@ -1,3 +1,4 @@
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
 import { Model, Document } from 'mongoose';
 import ErrorHandler from '@models/ErrorHandler';
@@ -77,7 +78,9 @@ const createOne = (Model: Model<Document>) => async (
   }
 };
 
-const getOne = (Model: Model<any>) => async (
+type T = Document;
+
+const getOne = (Model: Model<T>) => async (
   req: Request,
   res: Response,
   next: NextFunction

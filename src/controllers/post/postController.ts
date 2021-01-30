@@ -1,9 +1,9 @@
 import ErrorHandler from '@models/ErrorHandler';
-import User from '@models/User';
 import baseController from '@controllers/base/baseController';
 import { Request, Response } from 'express';
+import Post from '@models/Post';
 
-class UserController {
+class PostController {
   private _base = baseController;
   defaultMethod() {
     return {
@@ -11,14 +11,14 @@ class UserController {
     };
   }
 
-  getAll = this._base.getAll(User);
-  getUser = this._base.getOne(User);
-  editUser = this._base.updateOne(User);
-  deleteUser = this._base.deleteOne(User);
+  getAll = this._base.getAll(Post);
+  getPost = this._base.getOne(Post);
+  editPost = this._base.updateOne(Post);
+  deletePost = this._base.deleteOne(Post);
 
   deleteMe = async (req: Request, res: Response, next) => {
     try {
-      await User.findByIdAndUpdate(req.body.id, {
+      await Post.findByIdAndUpdate(req.body.id, {
         active: false,
       });
 
@@ -35,4 +35,4 @@ class UserController {
   }
 }
 
-export = new UserController();
+export = new PostController();

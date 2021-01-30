@@ -9,6 +9,7 @@ GET {{baseUrl}}/test/error
 ###
 GET {{baseUrl}}/user?page=1&limit=10
 ###
+# @name login
 POST {{baseUrl}}/user/login HTTP/1.1 
 content-type: application/json
 
@@ -28,5 +29,13 @@ content-type: application/json
     "confirmPassword": "benjoo"
 }
 
-# POST {{baseUrl}}/test HTTP/1.1
-# content-type: application/json
+###
+@authToken = {{login.response.body.token}}
+# @authToken = {{login.response.headers.X-AuthToken}}
+DELETE {{baseUrl}}/user/deleteMe HTTP/1.1
+Authorization: Bearer {{authToken}}
+content-type: application/json
+
+{
+    "id": "60141937dc5a202e78b87e0c"
+}

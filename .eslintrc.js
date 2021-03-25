@@ -14,4 +14,13 @@ module.exports = {
     // ecmaVersion: 9,
     // project: './tsconfig.json'
   },
+  rules: {
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': [
+      'error',
+      { ignoreRestArgs: true, fixToUnknown: true },
+    ],
+  },
 };

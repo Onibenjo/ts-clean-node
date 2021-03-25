@@ -1,12 +1,41 @@
 @baseUrl = http://localhost:5000/api/v1
 
-
 # @name test
 GET {{baseUrl}}/test/hi
 
 ###
 GET {{baseUrl}}/test/error
 
+###
+GET {{baseUrl}}/user?page=1&limit=10
+###
+# @name login
+POST {{baseUrl}}/user/login HTTP/1.1 
+content-type: application/json
 
-# POST {{baseUrl}}/test HTTP/1.1
-# content-type: application/json
+{
+    "email": "benjo4@gmail.com",
+    "password": "benjoo"
+}
+###
+POST {{baseUrl}}/user/signup HTTP/1.1 
+content-type: application/json
+
+{
+    "name": "Benjamin",
+    "username": "benjo4",
+    "email": "benjo4@gmail.com",
+    "password": "benjoo",
+    "confirmPassword": "benjoo"
+}
+
+###
+@authToken = {{login.response.body.token}}
+# @authToken = {{login.response.headers.X-AuthToken}}
+DELETE {{baseUrl}}/user/deleteMe HTTP/1.1
+Authorization: Bearer {{authToken}}
+content-type: application/json
+
+{
+    "id": "60141937dc5a202e78b87e0c"
+}
